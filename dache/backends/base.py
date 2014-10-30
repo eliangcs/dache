@@ -1,7 +1,7 @@
 import time
 import warnings
 
-from dache.utils import import_string
+from dache.utils.module_loading import import_string
 
 
 class InvalidCacheBackendError(Exception):
@@ -45,8 +45,8 @@ def get_key_func(key_func):
 
 class BaseCache(object):
 
-    def __init__(self, url, key_prefix='', timeout=None, version=1,
-                 key_func=None):
+    def __init__(self, key_prefix='', timeout=None, version=1, key_func=None,
+                 max_entries=300, cull_frequency=3):
         self.default_timeout = 300
         if timeout is not None:
             self.default_timeout = timeout
@@ -54,6 +54,8 @@ class BaseCache(object):
         self.key_prefix = key_prefix
         self.version = version
         self.key_func = get_key_func(key_func)
+        self._max_entries = max_entries
+        self._cull_frequency = cull_frequency
 
     def get_backend_timeout(self, timeout=DEFAULT_TIMEOUT):
         """Return the timeout value usable by this backend based upon the

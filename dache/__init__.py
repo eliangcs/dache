@@ -1,8 +1,8 @@
 import urlparse
 
 from dache.backends.filebased import FileBasedCache
-from dache.backends.locmem import LocMemCache
-from dache.utils import import_string
+# from dache.backends.locmem import LocMemCache
+from dache.utils.module_loading import import_string
 
 
 __all__ = ('register_backend', 'Cache')
@@ -10,7 +10,7 @@ __all__ = ('register_backend', 'Cache')
 
 _BACKENDS = {
     'file': FileBasedCache,
-    'locmem': LocMemCache
+    # 'locmem': LocMemCache
 }
 
 
@@ -29,7 +29,7 @@ class Cache(object):
 
         self._backend = backend_class(result, **options)
 
-        public_methods = ('add', 'get', 'set', 'delete', 'get_many', 'has_key'
+        public_methods = ('add', 'get', 'set', 'delete', 'get_many', 'has_key',
                           'incr', 'decr', 'set_many', 'delete_many', 'clear',
                           'validate_key', 'incr_version', 'decr_version',
                           'close')
