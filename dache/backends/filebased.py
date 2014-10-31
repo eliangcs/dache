@@ -27,12 +27,6 @@ class FileBasedCache(BaseCache):
         self._dir = os.path.abspath(url.path)
         self._createdir()
 
-    def add(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
-        if self.has_key(key, version):  # noqa
-            return False
-        self.set(key, value, timeout, version)
-        return True
-
     def get(self, key, default=None, version=None):
         fname = self._key_to_file(key, version)
         if os.path.exists(fname):

@@ -89,8 +89,10 @@ class BaseCache(object):
         Returns:
             bool: True if the value was stored, False otherwise.
         """
-        raise NotImplementedError(
-            'subclasses of BaseCache must provide an add() method')
+        if self.has_key(key, version):  # noqa
+            return False
+        self.set(key, value, timeout, version)
+        return True
 
     def get(self, key, default=None, version=None):
         """Fetch a given key from the cache. If the key does not exist, return
