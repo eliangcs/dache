@@ -6,6 +6,8 @@ from dache.backends.redis import RedisCache
 from dache.utils.module_loading import import_string
 
 
+__version__ = '0.0.1'
+
 __all__ = ('register_backend', 'Cache')
 
 
