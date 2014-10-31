@@ -42,8 +42,8 @@ class TestLocMemCache(unittest.TestCase):
 
     def test_simple(self):
         # Simple cache set/get works
-        self.self.cache.set('key', 'value')
-        self.assertEqual(self.self.cache.get('key'), 'value')
+        self.cache.set('key', 'value')
+        self.assertEqual(self.cache.get('key'), 'value')
 
     def test_add(self):
         # A key can be added to a cache
