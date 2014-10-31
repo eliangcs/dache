@@ -323,8 +323,8 @@ class TestLocMemCache(unittest.TestCase):
         def func(key, *args):
             return key
 
-        old_func = self.cache.key_func
-        self.cache.key_func = func
+        old_func = self.cache._backend.key_func
+        self.cache._backend.key_func = func
 
         try:
             with warnings.catch_warnings(record=True) as w:
@@ -341,7 +341,7 @@ class TestLocMemCache(unittest.TestCase):
                 self.assertEqual(len(w), 1)
                 self.assertIsInstance(w[0].message, CacheKeyWarning)
         finally:
-            self.cache.key_func = old_func
+            self.cache._backend.key_func = old_func
 
     def test_cache_versioning_get_set(self):
         # set, using default version = 1

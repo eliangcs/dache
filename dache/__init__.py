@@ -38,6 +38,6 @@ class Cache(object):
         public_methods = ('add', 'get', 'set', 'delete', 'get_many', 'has_key',
                           'incr', 'decr', 'set_many', 'delete_many', 'clear',
                           'validate_key', 'incr_version', 'decr_version',
-                          'close')
+                          'close', '__contains__')
         for method in public_methods:
             setattr(self, method, getattr(self._backend, method))
