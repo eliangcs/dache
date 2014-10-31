@@ -8,7 +8,7 @@ class InvalidCacheBackendError(Exception):
     pass
 
 
-class CacheKeyWarning(Exception):
+class CacheKeyWarning(RuntimeWarning):
     pass
 
 
