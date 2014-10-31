@@ -63,7 +63,7 @@ class TestLocMemCache(unittest.TestCase):
         another_cache.set('somekey', 'value2')
 
         self.assertEqual(self.cache.get('somekey'), 'value')
-        self.assertEqual(self.another_cache.get('somekey'), 'value2')
+        self.assertEqual(another_cache.get('somekey'), 'value2')
 
     def test_non_existent(self):
         # Non-existent cache keys return as None/default
@@ -305,10 +305,12 @@ class TestLocMemCache(unittest.TestCase):
         self.assertEqual(count, final_count)
 
     def test_cull(self):
-        self._perform_cull_test(self.cache, 50, 29)
+        cache = dache.Cache(self.CACHE_URL, max_entries=30)
+        self._perform_cull_test(cache, 50, 29)
 
     def test_zero_cull(self):
-        self._perform_cull_test(self.cache, 50, 19)
+        cache = dache.Cache(self.CACHE_URL, max_entries=30, cull_frequency=0)
+        self._perform_cull_test(cache, 50, 19)
 
     def test_invalid_keys(self):
         """All the builtin backends (except memcached, see below) should warn
