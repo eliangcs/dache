@@ -1,7 +1,7 @@
 import urlparse
 
 from dache.backends.filebased import FileBasedCache
-# from dache.backends.locmem import LocMemCache
+from dache.backends.locmem import LocMemCache
 from dache.backends.redis import RedisCache
 from dache.utils.module_loading import import_string
 
@@ -13,8 +13,8 @@ __all__ = ('register_backend', 'Cache')
 
 _BACKENDS = {
     'file': FileBasedCache,
-    'redis': RedisCache
-    # 'locmem': LocMemCache
+    'locmem': LocMemCache,
+    'redis': RedisCache,
 }
 
 
