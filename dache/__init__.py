@@ -1,5 +1,6 @@
 import urlparse
 
+from dache.backends.base import CacheKeyWarning  # noqa
 from dache.backends.filebased import FileBasedCache
 from dache.backends.locmem import LocMemCache
 from dache.backends.redis import RedisCache
@@ -8,7 +9,7 @@ from dache.utils.module_loading import import_string
 
 __version__ = '0.0.1'
 
-__all__ = ('register_backend', 'Cache')
+__all__ = ('register_backend', 'Cache', 'CacheKeyWarning')
 
 
 _BACKENDS = {
