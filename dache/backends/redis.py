@@ -3,6 +3,8 @@ from __future__ import absolute_import
 import redis
 import time
 
+from six.moves import cPickle as pickle
+
 from .base import BaseCache, DEFAULT_TIMEOUT
 
 
@@ -22,9 +24,13 @@ class RedisCache(BaseCache):
     def get(self, key, default=None, version=None):
         key = self._get_redis_key(key, version)
 
-        wrapper = self.redis.hgetall(key)
-        print wrapper
-        if wrapper['timeout'] < time.time():
+        wrapper = self.redis.get(key)
+        if not wrapper:
+            return default
+
+        wrapper = pickle.loads(wrapper)
+        timeout = wrapper['timeout']
+        if timeout is not None and timeout < time.time():
             self.redis.delete(key)
             return default
 
@@ -37,7 +43,7 @@ class RedisCache(BaseCache):
             'timeout': self.get_backend_timeout(timeout),
             'value': value
         }
-        self.redis.hmset(key, wrapper)
+        self.redis.set(key, pickle.dumps(wrapper))
 
     def delete(self, key, version=None):
         key = self._get_redis_key(key, version)

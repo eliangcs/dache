@@ -678,4 +678,13 @@ class TestFileBasedCache(TestLocMemCache):
 
 
 class TestRedisCache(TestLocMemCache):
+
     CACHE_URL = 'redis://127.0.0.1/0'
+
+    def test_cull(self):
+        # Culling isn't implement in redis backend
+        pass
+
+    def test_zero_cull(self):
+        # Culling isn't implement in redis backend
+        pass
