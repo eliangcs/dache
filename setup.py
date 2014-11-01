@@ -40,6 +40,12 @@ def parse_requirements(filename):
     return filter(lambda x: x and not x.startswith('#'), content.splitlines())
 
 
+test_requires = parse_requirements('requirements-test.txt')
+
+redis_requires = [
+    'redis==2.10.3'
+]
+
 setup(
     name='dache',
     version=find_version('dache', '__init__.py'),
@@ -51,6 +57,10 @@ setup(
     license='BSD',
     packages=['dache'],
     install_requires=parse_requirements('requirements.txt'),
+    extras_require={
+        'test': test_requires,
+        'redis': redis_requires
+    },
     classifiers=[
         'Development Status :: 1 - Planning',
         'Intended Audience :: Developers',

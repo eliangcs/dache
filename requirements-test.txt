@@ -1,2 +1,3 @@
 pytest
 pytest-cov
+redis==2.10.3
