@@ -20,7 +20,7 @@ class LocMemCache(BaseCache):
     def __init__(self, url, **options):
         super(LocMemCache, self).__init__(**options)
 
-        # locmem://abcd:1234/efg -> abcd:1234/eft
+        # locmem://abcd:1234/efg -> abcd:1234/efg
         name = url.geturl()[len(url.scheme) + 3:]
 
         self._cache = _caches.setdefault(name, {})
