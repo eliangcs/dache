@@ -312,6 +312,14 @@ class TestLocMemCache(unittest.TestCase):
         cache = dache.Cache(self.CACHE_URL, max_entries=30, cull_frequency=0)
         self._perform_cull_test(cache, 50, 19)
 
+    def test_unlimited_max_entries(self):
+        # Passing None to max_entries should make it have unlimited number of
+        # entries of capacity
+        cache = dache.Cache(self.CACHE_URL, max_entries=None)
+
+        # Can't really test unlimited number, so just test with a large number
+        self._perform_cull_test(cache, 1000, 999)
+
     def test_invalid_keys(self):
         """All the builtin backends (except memcached, see below) should warn
         on keys that would be refused by memcached. This encourages portable
