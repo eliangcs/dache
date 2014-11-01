@@ -1,3 +1,5 @@
+import six
+
 from six.moves.urllib.parse import urlparse
 
 from dache.backends.base import CacheKeyWarning  # noqa
@@ -30,7 +32,7 @@ class Cache(object):
         # Create cache backend
         result = urlparse(url)
         backend_class = _BACKENDS[result.scheme]
-        if isinstance(backend_class, basestring):
+        if isinstance(backend_class, six.string_types):
             backend_class = import_string(backend_class)
 
         self._backend = backend_class(result, **options)
