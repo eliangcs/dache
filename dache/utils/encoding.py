@@ -3,8 +3,6 @@ import six
 
 from decimal import Decimal
 
-from .functional import Promise
-
 
 def is_protected_type(obj):
     """Determine if the object instance is of a protected type.
