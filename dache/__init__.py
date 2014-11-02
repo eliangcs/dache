@@ -3,9 +3,6 @@ import six
 from six.moves.urllib.parse import urlparse
 
 from dache.backends.base import CacheKeyWarning  # noqa
-from dache.backends.filebased import FileBasedCache
-from dache.backends.locmem import LocMemCache
-from dache.backends.redis import RedisCache
 from dache.utils.module_loading import import_string
 
 
@@ -15,9 +12,9 @@ __all__ = ('register_backend', 'Cache', 'CacheKeyWarning')
 
 
 _BACKENDS = {
-    'file': FileBasedCache,
-    'locmem': LocMemCache,
-    'redis': RedisCache,
+    'file': 'dache.backends.FileBasedCache',
+    'locmem': 'dache.backends.LocMemCache',
+    'redis': 'dache.backends.RedisCache',
 }
 
 
