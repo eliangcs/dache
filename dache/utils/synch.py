@@ -1,5 +1,4 @@
-"""
-Synchronization primitives:
+"""Synchronization primitives:
 
     - reader-writer lock (preference to writers)
 
