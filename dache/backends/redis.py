@@ -1,7 +1,6 @@
 from __future__ import absolute_import
 
 import redis
-import time
 
 from six.moves import cPickle as pickle
 
@@ -24,26 +23,25 @@ class RedisCache(BaseCache):
     def get(self, key, default=None, version=None):
         key = self._get_redis_key(key, version)
 
-        wrapper = self.redis.get(key)
-        if not wrapper:
+        value = self.redis.get(key)
+        if not value:
             return default
 
-        wrapper = pickle.loads(wrapper)
-        timeout = wrapper['timeout']
-        if timeout is not None and timeout < time.time():
-            self.redis.delete(key)
-            return default
-
-        return wrapper['value']
+        value = pickle.loads(value)
+        return value
 
     def set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         key = self._get_redis_key(key, version)
 
-        wrapper = {
-            'timeout': self.get_backend_timeout(timeout),
-            'value': value
-        }
-        self.redis.set(key, pickle.dumps(wrapper))
+        value = pickle.dumps(value)
+        if timeout == DEFAULT_TIMEOUT:
+            timeout = self.default_timeout
+
+        pipeline = self.redis.pipeline(transaction=True)
+        pipeline.set(key, value)
+        if timeout is not None:
+            pipeline.expire(key, int(timeout))
+        pipeline.execute()
 
     def delete(self, key, version=None):
         key = self._get_redis_key(key, version)
