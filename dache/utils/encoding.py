@@ -17,9 +17,8 @@ def is_protected_type(obj):
 
 
 def force_bytes(s, encoding='utf-8', strings_only=False, errors='strict'):
-    """
-    Similar to smart_bytes, except that lazy instances are resolved to
-    strings, rather than kept as lazy objects.
+    """Return a bytestring version of ``s``, encoded as specified in
+    ``encoding``.
 
     If strings_only is True, don't convert (some) non-string-like objects.
     """
@@ -33,8 +32,6 @@ def force_bytes(s, encoding='utf-8', strings_only=False, errors='strict'):
         return s
     if isinstance(s, (bytearray, memoryview)):
         return bytes(s)
-    if isinstance(s, Promise):
-        return six.text_type(s).encode(encoding, errors)
     if not isinstance(s, six.string_types):
         try:
             if six.PY3:
