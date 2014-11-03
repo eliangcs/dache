@@ -22,7 +22,13 @@ class BaseMemcachedCache(BaseCache):
         self.LibraryValueNotFoundException = value_not_found_exception
 
         self._lib = library
-        self._options = options
+
+        # HACK: Extract pylibmc client options. We don't want to pass these
+        # app-level options to pylibmc.
+        for key in ('key_prefix', 'timeout', 'version', 'key_func',
+                    'max_entries', 'cull_frequency'):
+            options.pop(key, None)
+        self._pylibmc_options = options
 
     @property
     def _cache(self):
@@ -150,9 +156,8 @@ class MemcachedCache(BaseMemcachedCache):
     """An implementation of a cache binding using python-memcached."""
     def __init__(self, url, **options):
         import memcache
-        super(MemcachedCache, self).__init__(
-            url, library=memcache, value_not_found_exception=ValueError,
-            **options)
+        super(MemcachedCache, self).__init__(url, memcache, ValueError,
+                                             **options)
 
     @property
     def _cache(self):
@@ -166,13 +171,13 @@ class PyLibMCCache(BaseMemcachedCache):
     """An implementation of a cache binding using pylibmc."""
     def __init__(self, url, **options):
         import pylibmc
-        super(PyLibMCCache, self).__init__(
-            url, library=pylibmc, value_not_found_exception=pylibmc.NotFound)
+        super(PyLibMCCache, self).__init__(url, pylibmc, pylibmc.NotFound,
+                                           **options)
 
     @cached_property
     def _cache(self):
         client = self._lib.Client(self._servers)
-        if self._options:
-            client.behaviors = self._options
+        if self._pylibmc_options:
+            client.behaviors = self._pylibmc_options
 
         return client

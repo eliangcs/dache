@@ -718,15 +718,29 @@ class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
         memcached-API-library agnostic, we only assert that a generic exception
         of some kind is raised.
         """
+        key_with_spaces = 'key with spaces'
+        long_key = 'a' * 251
+
         # memcached does not allow whitespace or control characters in keys
         with self.assertRaises(Exception):
-            self.cache.set('key with spaces', 'value')
+            self.cache.set(key_with_spaces, 'value')
 
         # memcached limits key length to 250
         with self.assertRaises(Exception):
-            self.cache.set('a' * 251, 'value')
+            self.cache.set(long_key, 'value')
 
 
 class TestPyLibMCCache(TestMemcachedCache):
+
     CACHE_URL = 'pylibmc://%s' % os.getenv('CACHE_SERVER',
                                            DEFAULT_CACHE_SERVER)
+
+    def tearDown(self):
+        # pylibmc rasies error if you cache.clear() after inserting an invalid
+        # keys (test_invalid_keys), but we can avoid it simply by clearing it
+        # again. Refs https://github.com/lericson/pylibmc/issues/114.
+        try:
+            self.cache.clear()
+        except:
+            self.cache.clear()
+        self.cache.close()
