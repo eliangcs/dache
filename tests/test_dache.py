@@ -2,6 +2,7 @@
 
 import os
 import shutil
+import six
 import tempfile
 import time
 import unittest
@@ -732,16 +733,18 @@ class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
             self.cache.set(long_key, 'value')
 
 
-class TestPyLibMCCache(TestMemcachedCache):
+if six.PY2:  # XXX: PyLibMC hasn't supported Python 3, so don't test it for now
+    class TestPyLibMCCache(TestMemcachedCache):
 
-    CACHE_URL = 'pylibmc://%s' % get_cache_server()
+        CACHE_URL = 'pylibmc://%s' % get_cache_server()
 
-    def tearDown(self):
-        # pylibmc rasies error if you cache.clear() after inserting an invalid
-        # keys (test_invalid_keys), but we can avoid it simply by clearing it
-        # again. Refs https://github.com/lericson/pylibmc/issues/114.
-        try:
-            self.cache.clear()
-        except:
-            self.cache.clear()
-        self.cache.close()
+        def tearDown(self):
+            # pylibmc rasies error if you cache.clear() after inserting an
+            # invalid keys (test_invalid_keys), but we can avoid it simply by
+            # clearing it again.
+            # Refs https://github.com/lericson/pylibmc/issues/114.
+            try:
+                self.cache.clear()
+            except:
+                self.cache.clear()
+            self.cache.close()
