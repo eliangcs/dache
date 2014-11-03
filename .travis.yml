@@ -8,6 +8,7 @@ branches:
   only:
     - master
 services:
+  - memcached
   - redis-server
 install:
   - pip install -r requirements.txt

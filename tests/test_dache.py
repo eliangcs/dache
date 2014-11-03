@@ -14,6 +14,10 @@ from six.moves import cPickle as pickle
 from dache import CacheKeyWarning
 
 
+# The default server on which the cache services are installed
+DEFAULT_CACHE_SERVER = '127.0.0.1'
+
+
 # functions/classes for complex data type tests
 def f():
     return 42
@@ -685,14 +689,28 @@ class TestFileBasedCache(TestLocMemCache):
             shutil.rmtree(cls.CACHE_URL)
 
 
-class TestRedisCache(TestLocMemCache):
-
-    CACHE_URL = 'redis://127.0.0.1/0'
-
+class DontTestCullMixin(object):
+    """Some backends support culling natively, so no need to implement nor test
+    cullling."""
     def test_cull(self):
-        # Culling isn't implement in redis backend
+        # Culling isn't implemented for the backend
         pass
 
     def test_zero_cull(self):
-        # Culling isn't implement in redis backend
+        # Culling isn't implemented for the backend
         pass
+
+
+class TestRedisCache(DontTestCullMixin, TestLocMemCache):
+    CACHE_URL = 'redis://%s/0' % os.getenv('CACHE_SERVER',
+                                           DEFAULT_CACHE_SERVER)
+
+
+class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
+    CACHE_URL = 'memcached://%s' % os.getenv('CACHE_SERVER',
+                                             DEFAULT_CACHE_SERVER)
+
+
+class TestPyLibMCCache(DontTestCullMixin, TestLocMemCache):
+    CACHE_URL = 'pylibmc://%s' % os.getenv('CACHE_SERVER',
+                                           DEFAULT_CACHE_SERVER)

@@ -14,6 +14,8 @@ __all__ = ('register_backend', 'Cache', 'CacheKeyWarning')
 _BACKENDS = {
     'file': 'dache.backends.FileBasedCache',
     'locmem': 'dache.backends.LocMemCache',
+    'memcached': 'dache.backends.MemcachedCache',
+    'pylibmc': 'dache.backends.PyLibMCCache',
     'redis': 'dache.backends.RedisCache',
 }
 
