@@ -7,5 +7,8 @@ Dache
 .. image:: https://coveralls.io/repos/eliangcs/dache/badge.png?branch=master
     :target: https://coveralls.io/r/eliangcs/dache
 
-Forked from Django's cache framework, Dache is a  Python library that provides
+Forked from Django's cache framework, Dache is a Python library that provides
 a unified API for various cache backends.
+
+.. important:: This package is still in development. **Do NOT use it in
+               production!**
