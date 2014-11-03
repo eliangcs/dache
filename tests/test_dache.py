@@ -18,6 +18,10 @@ from dache import CacheKeyWarning
 DEFAULT_CACHE_SERVER = '127.0.0.1'
 
 
+def get_cache_server():
+    return os.getenv('CACHE_SERVER', DEFAULT_CACHE_SERVER)
+
+
 # functions/classes for complex data type tests
 def f():
     return 42
@@ -702,14 +706,12 @@ class DontTestCullMixin(object):
 
 
 class TestRedisCache(DontTestCullMixin, TestLocMemCache):
-    CACHE_URL = 'redis://%s/0' % os.getenv('CACHE_SERVER',
-                                           DEFAULT_CACHE_SERVER)
+    CACHE_URL = 'redis://%s/0' % get_cache_server()
 
 
 class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
 
-    CACHE_URL = 'memcached://%s' % os.getenv('CACHE_SERVER',
-                                             DEFAULT_CACHE_SERVER)
+    CACHE_URL = 'memcached://%s' % get_cache_server()
 
     def test_invalid_keys(self):
         """On memcached, we don't introduce a duplicate key validation step
@@ -732,8 +734,7 @@ class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
 
 class TestPyLibMCCache(TestMemcachedCache):
 
-    CACHE_URL = 'pylibmc://%s' % os.getenv('CACHE_SERVER',
-                                           DEFAULT_CACHE_SERVER)
+    CACHE_URL = 'pylibmc://%s' % get_cache_server()
 
     def tearDown(self):
         # pylibmc rasies error if you cache.clear() after inserting an invalid
