@@ -6,9 +6,12 @@ except ImportError:
 import codecs
 import os
 import re
+import sys
 
 
 here = os.path.abspath(os.path.dirname(__file__))
+
+py3 = sys.version_info[0] == 3
 
 
 # Read the version number from a source file.
@@ -35,20 +38,26 @@ def read_description(filename):
 
 
 basic_requires = [
-    'six==1.8.0',
+    'six>=1.8.0,<1.9.0',
 ]
 
-memcached_requires = [
-    'python-memcached==1.53',
-]
+if py3:
+    # python-memcached has another package for Python 3
+    memcached_requires = [
+        'python3-memcached>=1.51',
+    ]
+else:
+    memcached_requires = [
+        'python-memcached>=1.53',
+    ]
 
 pylibmc_requires = [
-    'pylibmc==1.3.0',
+    'pylibmc>=1.3.0,<1.4.0',
 ]
 
 redis_requires = [
-    'hiredis==0.1.5',
-    'redis==2.10.3',
+    'hiredis>=0.1.5,<0.2.0',
+    'redis>=2.10.3,<2.11.0',
 ]
 
 test_requires = [
