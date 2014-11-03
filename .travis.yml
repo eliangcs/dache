@@ -11,8 +11,8 @@ services:
   - memcached
   - redis-server
 install:
-  - pip install -r requirements.txt
-  - pip install -r requirements-test.txt
+  - pip install .
+  - pip install -e .[test]
 script:
   - py.test
 after_success:

@@ -34,32 +34,44 @@ def read_description(filename):
         return f.read()
 
 
-def parse_requirements(filename):
-    with open(filename) as f:
-        content = f.read()
-    return filter(lambda x: x and not x.startswith('#'), content.splitlines())
-
-
-test_requires = parse_requirements('requirements-test.txt')
-
-redis_requires = [
-    'redis==2.10.3'
+basic_requires = [
+    'six==1.8.0',
 ]
 
+memcached_requires = [
+    'python-memcached==1.53',
+]
+
+pylibmc_requires = [
+    'pylibmc==1.3.0',
+]
+
+redis_requires = [
+    'hiredis==0.1.5',
+    'redis==2.10.3',
+]
+
+test_requires = [
+    'pytest',
+    'pytest-cov',
+] + redis_requires + memcached_requires + pylibmc_requires
+
 setup(
-    name='dache',
+    name='Dache',
     version=find_version('dache', '__init__.py'),
     url='https://github.com/eliangcs/dache',
-    description='A generic cache library for various backends',
+    description='Unify API for various cache backends',
     long_description=read_description('README.rst'),
     author='Chang-Hung Liang',
     author_email='eliang.cs@gmail.com',
     license='BSD',
     packages=['dache'],
-    install_requires=parse_requirements('requirements.txt'),
+    install_requires=basic_requires,
     extras_require={
+        'memcached': memcached_requires,
+        'pylibmc': pylibmc_requires,
+        'redis': redis_requires,
         'test': test_requires,
-        'redis': redis_requires
     },
     classifiers=[
         'Development Status :: 1 - Planning',
