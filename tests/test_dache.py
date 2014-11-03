@@ -707,10 +707,26 @@ class TestRedisCache(DontTestCullMixin, TestLocMemCache):
 
 
 class TestMemcachedCache(DontTestCullMixin, TestLocMemCache):
+
     CACHE_URL = 'memcached://%s' % os.getenv('CACHE_SERVER',
                                              DEFAULT_CACHE_SERVER)
 
+    def test_invalid_keys(self):
+        """On memcached, we don't introduce a duplicate key validation step
+        (for speed reasons), we just let the memcached API library raise its
+        own exception on bad keys. Refs Django #6447. In order to be
+        memcached-API-library agnostic, we only assert that a generic exception
+        of some kind is raised.
+        """
+        # memcached does not allow whitespace or control characters in keys
+        with self.assertRaises(Exception):
+            self.cache.set('key with spaces', 'value')
 
-class TestPyLibMCCache(DontTestCullMixin, TestLocMemCache):
+        # memcached limits key length to 250
+        with self.assertRaises(Exception):
+            self.cache.set('a' * 251, 'value')
+
+
+class TestPyLibMCCache(TestMemcachedCache):
     CACHE_URL = 'pylibmc://%s' % os.getenv('CACHE_SERVER',
                                            DEFAULT_CACHE_SERVER)
