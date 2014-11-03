@@ -46,14 +46,17 @@ if py3:
     memcached_requires = [
         'python3-memcached>=1.51',
     ]
+
+    # PyLibMC hasn't supported Python 3
+    pylibmc_requires = []
 else:
     memcached_requires = [
         'python-memcached>=1.53',
     ]
 
-pylibmc_requires = [
-    'pylibmc>=1.3.0,<1.4.0',
-]
+    pylibmc_requires = [
+        'pylibmc>=1.3.0,<1.4.0',
+    ]
 
 redis_requires = [
     'hiredis>=0.1.5,<0.2.0',
