@@ -73,7 +73,7 @@ test_requires = [
 ] + leveldb_requires + memcached_requires + pylibmc_requires + redis_requires
 
 setup(
-    name='Dache',
+    name='dache',
     version=find_version('dache', '__init__.py'),
     url='https://github.com/eliangcs/dache',
     description='Unify API for various cache backends',
