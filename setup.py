@@ -76,7 +76,7 @@ setup(
     name='dache',
     version=find_version('dache', '__init__.py'),
     url='https://github.com/eliangcs/dache',
-    description='Unify API for various cache backends',
+    description='Unify API across various cache backends',
     long_description=read_description('README.rst'),
     author='Chang-Hung Liang',
     author_email='eliang.cs@gmail.com',
