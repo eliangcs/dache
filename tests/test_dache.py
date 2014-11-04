@@ -694,6 +694,10 @@ class TestFileBasedCache(TestLocMemCache):
             shutil.rmtree(cls.CACHE_URL)
 
 
+class TestLevelDBCache(TestFileBasedCache):
+    CACHE_URL = 'leveldb://%s' % tempfile.mkdtemp()
+
+
 class DontTestCullMixin(object):
     """Some backends support culling natively, so no need to implement nor test
     cullling."""
