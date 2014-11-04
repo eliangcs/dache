@@ -1,6 +1,9 @@
 Dache
 =====
 
+.. image:: https://badge.fury.io/py/dache.svg
+    :target: http://badge.fury.io/py/dache
+
 .. image:: https://travis-ci.org/eliangcs/dache.svg?branch=master
     :target: https://travis-ci.org/eliangcs/dache
 
