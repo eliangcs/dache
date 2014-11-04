@@ -4,6 +4,7 @@ from __future__ import absolute_import
 
 import leveldb
 import os
+import random
 import shutil
 import time
 
@@ -41,6 +42,7 @@ class LevelDBCache(BaseCache):
 
     def set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         key = self._make_and_validate_key(key, version)
+        self._cull()  # Make room if necessary
         wrapper = {
             'timeout': self.get_backend_timeout(timeout),
             'value': value
@@ -61,13 +63,31 @@ class LevelDBCache(BaseCache):
         # no longer exist
         self._dbs.pop(self._dir, None)
 
-    def _make_and_validate_key(self, key, version):
-        key = self.make_key(key, version=version)
-        self.validate_key(key)
-        return key
-
     @property
     def _db(self):
         if self._dir not in self._dbs:
             self._dbs[self._dir] = leveldb.LevelDB(self._dir)
         return self._dbs[self._dir]
+
+    def _make_and_validate_key(self, key, version):
+        key = self.make_key(key, version=version)
+        self.validate_key(key)
+        return key
+
+    def _cull(self):
+        if self._max_entries is None:
+            # No limit on number of _max_entries
+            return
+
+        keys = list(self._db.RangeIter(include_value=False))
+        num_entries = len(keys)
+
+        if num_entries < self._max_entries:
+            return  # Return early if no culling is required
+        if self._cull_frequency == 0:
+            return self.clear()
+
+        # Delete a random selection of entries
+        keys = random.sample(keys, int(num_entries / self._cull_frequency))
+        for key in keys:
+            self._db.Delete(key)
