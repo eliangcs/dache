@@ -13,8 +13,23 @@ Dache
 Forked from Django's cache framework, Dache is a Python library that provides
 a unified API across various cache backends.
 
+**WARNING**: This package is still in development. **Do NOT use it in
+production!**
 
-Warning
--------
 
-This package is still in development. **Do NOT use it in production!**
+Installation
+------------
+::
+
+    pip install dache
+
+
+Usage
+-----
+::
+
+    >>> import dache
+    >>> cache = dache.Cache('locmem://')
+    >>> cache.set('key', {'value': 1234})
+    >>> cache.get('key')
+    {'value': 1234}
