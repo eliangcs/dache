@@ -41,6 +41,10 @@ basic_requires = [
     'six>=1.8.0,<1.9.0',
 ]
 
+leveldb_requires = [
+    'leveldb==0.193',
+]
+
 if py3:
     # python-memcached has another package for Python 3
     memcached_requires = [
@@ -66,7 +70,7 @@ redis_requires = [
 test_requires = [
     'pytest',
     'pytest-cov',
-] + redis_requires + memcached_requires + pylibmc_requires
+] + leveldb_requires + memcached_requires + pylibmc_requires + redis_requires
 
 setup(
     name='Dache',
@@ -80,6 +84,7 @@ setup(
     packages=['dache'],
     install_requires=basic_requires,
     extras_require={
+        'leveldb': leveldb_requires,
         'memcached': memcached_requires,
         'pylibmc': pylibmc_requires,
         'redis': redis_requires,
