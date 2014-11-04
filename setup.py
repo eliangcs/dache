@@ -81,7 +81,7 @@ setup(
     author='Chang-Hung Liang',
     author_email='eliang.cs@gmail.com',
     license='BSD',
-    packages=['dache'],
+    packages=['dache', 'dache.backends', 'dache.utils'],
     install_requires=basic_requires,
     extras_require={
         'leveldb': leveldb_requires,
