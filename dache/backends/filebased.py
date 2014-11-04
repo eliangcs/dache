@@ -82,9 +82,13 @@ class FileBasedCache(BaseCache):
         of num_entries / cull_frequency. A value of 0 for CULL_FREQUENCY means
         that the entire cache will be purged.
         """
+        if self._max_entries is None:
+            # No limit on number of entries
+            return
+
         filelist = self._list_cache_files()
         num_entries = len(filelist)
-        if self._max_entries is None or num_entries < self._max_entries:
+        if num_entries < self._max_entries:
             return  # return early if no culling is required
         if self._cull_frequency == 0:
             return self.clear()  # Clear the cache when CULL_FREQUENCY = 0
