@@ -11,6 +11,7 @@ import time
 from six.moves import cPickle as pickle
 
 from .base import BaseCache, DEFAULT_TIMEOUT
+from dache.utils.encoding import force_bytes
 
 
 class LevelDBCache(BaseCache):
@@ -72,7 +73,7 @@ class LevelDBCache(BaseCache):
     def _make_and_validate_key(self, key, version):
         key = self.make_key(key, version=version)
         self.validate_key(key)
-        return key
+        return force_bytes(key)
 
     def _cull(self):
         if self._max_entries is None:
