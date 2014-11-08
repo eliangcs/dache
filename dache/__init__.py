@@ -6,7 +6,7 @@ from dache.backends.base import CacheKeyWarning  # noqa
 from dache.utils.module_loading import import_string
 
 
-__version__ = '0.0.3'
+__version__ = '0.0.4'
 
 __all__ = ('register_backend', 'Cache', 'CacheKeyWarning')
 
