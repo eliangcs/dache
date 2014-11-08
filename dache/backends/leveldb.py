@@ -2,6 +2,7 @@
 
 from __future__ import absolute_import
 
+import errno
 import leveldb
 import os
 import random
@@ -66,7 +67,12 @@ class LevelDBCache(BaseCache):
 
     @property
     def _db(self):
-        if self._dir not in self._dbs:
+        created = self._createdir()
+        if self._dir in self._dbs:
+            if created:
+                del self._dbs[self._dir]
+                self._dbs[self._dir] = leveldb.LevelDB(self._dir)
+        else:
             self._dbs[self._dir] = leveldb.LevelDB(self._dir)
         return self._dbs[self._dir]
 
@@ -92,3 +98,16 @@ class LevelDBCache(BaseCache):
         keys = random.sample(keys, int(num_entries / self._cull_frequency))
         for key in keys:
             self._db.Delete(key)
+
+    def _createdir(self):
+        if not os.path.exists(self._dir):
+            try:
+                os.makedirs(self._dir, 0o700)
+            except OSError as e:
+                if e.errno != errno.EEXIST:
+                    raise EnvironmentError(
+                        "Cache directory '%s' does not exist "
+                        "and could not be created'" % self._dir)
+            else:
+                return True
+        return False

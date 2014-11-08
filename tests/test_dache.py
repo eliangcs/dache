@@ -690,8 +690,38 @@ class TestFileBasedCache(TestLocMemCache):
         super(TestFileBasedCache, cls).tearDownClass()
 
         # Delete cache directory
-        if os.path.exists(cls.CACHE_URL):
-            shutil.rmtree(cls.CACHE_URL)
+        cache_dir = cls.get_cache_dir()
+        if os.path.exists(cache_dir):
+            shutil.rmtree(cache_dir)
+
+    @classmethod
+    def get_cache_dir(cls, cache_url=None):
+        cache_url = cache_url or cls.CACHE_URL
+        idx = cache_url.find('://') + 3
+        return cache_url[idx:]
+
+    def test_multi_nonexisting_directory(self):
+        cache_url = os.path.join(self.CACHE_URL, 'does', 'not', 'exist')
+        cache = dache.Cache(cache_url)
+        cache.set('hello', 'world')
+        self.assertEqual(cache.get('hello'), 'world')
+
+        cache.delete('hello')
+        self.assertIsNone(cache.get('hello'))
+
+        cache.add('hello', 'world2')
+        self.assertEqual(cache.get('hello'), 'world2')
+
+    def test_delete_directory(self):
+        cache_url = os.path.join(self.CACHE_URL, 'test')
+        cache = dache.Cache(cache_url)
+        cache.set('hello', 'world')
+
+        cache_dir = self.get_cache_dir(cache_url)
+        shutil.rmtree(cache_dir)
+
+        # Cache should still work if the directory is deleted
+        self.assertIsNone(cache.get('hello'))
 
 
 class TestLevelDBCache(TestFileBasedCache):
